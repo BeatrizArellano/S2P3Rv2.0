@@ -30,7 +30,7 @@ executable_file_name = 's2p3_rv2.0'
 met_data_location = base_directory+sim_directory+'met_data/processed/' # The location containing the tar.gz met files (in the format met_data_year.tar.gz)
 
 # met_data_temporary_location = '/mnt/ramdisk/'
-met_data_temporary_location = '/mnt/ramd_test-profile/' # The location that met data for each year will be un tar.gziped into
+met_data_temporary_location =  base_directory + 'met_data/tmp/'# The location that met data for each year will be un tar.gziped into
 # each grid point each year has to read in a new meterology dataset from disk so it may make sense to make this temporary location a RAM disk (see readme)
 
 start_year = 2000
