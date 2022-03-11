@@ -14,34 +14,35 @@ import pandas as pd
 # you may need to change things here             #
 ##################################################
 
-base_directory = '/home/ph290/s2p3/S2P3Rv2.0/'
+base_directory = '../../'
+sim_directory = 'sims/test_profile/'
 num_procs = mp.cpu_count() # this will use all available processors. Note that on a multi-node machine it can only use the processors on one node
 # num_procs = 1 # The default is to use all available processors, but it is possible to specify the number of processors.
 
-output_directory = base_directory+'/test_output/'  #where you want the output to go (note you can specify the whole thing - no need for base_directory+ at the start)
+output_directory = base_directory+sim_directory+'/output/'  #where you want the output to go (note you can specify the whole thing - no need for base_directory+ at the start)
 
-output_file_name = 'test_output'
+output_file_name = 'test_profile'
 meterological_file_name = 'meterological_data'
-domain_file_name = 's12_m2_s2_n2_h_map.dat'
+domain_file_name = 's12_m2_s2_n2_h_map_UK.dat'
 nutrient_file_name = 'initial_nitrate.dat'
 executable_file_name = 's2p3_rv2.0'
 
-met_data_location = '../../met_data/' # The location containing the tar.gz met files (in the format met_data_year.tar.gz)
+met_data_location = base_directory+sim_directory+'met_data/processed/' # The location containing the tar.gz met files (in the format met_data_year.tar.gz)
 
 # met_data_temporary_location = '/mnt/ramdisk/'
-met_data_temporary_location = '../met/' # The location that met data for each year will be un tar.gziped into
+met_data_temporary_location = '/mnt/ramd_test-profile/' # The location that met data for each year will be un tar.gziped into
 # each grid point each year has to read in a new meterology dataset from disk so it may make sense to make this temporary location a RAM disk (see readme)
 
 start_year = 2000
 
-end_year = 2000 # same as start year resuls in a 1 year run
+end_year = 2010 # same as start year resuls in a 1 year run
 depth_min = 10.0 # NOTE that these numbers MUST be the same as those used in the scripts used to produce the meterology and nutrient files, otherwse data will not be taken for teh correct lats/lons and/or the script will fail
-depth_max = 50.0
+depth_max = 100.0
 write_error_output = False
 
 parallel_processing = True
 
-generate_netcdf_files = True
+generate_netcdf_files = False
 #note does not output error data if write_error_output set to True
 
 #######################################################
@@ -50,7 +51,7 @@ generate_netcdf_files = True
 #  2. 3D data  (water column)
 #######################################################
 
-output_type = 1
+output_type = 2
 
 #######################################################
 # Variables to output from model                      #
