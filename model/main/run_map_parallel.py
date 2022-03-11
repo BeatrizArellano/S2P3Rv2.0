@@ -45,6 +45,14 @@ generate_netcdf_files = True
 #note does not output error data if write_error_output set to True
 
 #######################################################
+# Choose whether to output 2D or 3D data
+#  1. 2D data  (surface and/or depth)
+#  2. 3D data  (water column)
+#######################################################
+
+output_type = 1
+
+#######################################################
 # Variables to output from model                      #
 # =1 means output, =0 means do not output             #
 # the columns in the output will be left to right in  #
@@ -210,6 +218,7 @@ def run_model(domain_file_name,lats_lons,year,start_year,unique_job_id,met_data_
     unique_job_id,
     met_data_temporary_location,
     'map',
+    str(output_type),
     str(i+1),
     str(smaj1[i]),
     str(smin1[i]),
@@ -254,6 +263,7 @@ def run_model(domain_file_name,lats_lons,year,start_year,unique_job_id,met_data_
     unique_job_id,
     met_data_temporary_location,
     'map',
+    str(output_type),
     str(i+1),
     str(smaj1[i]),
     str(smin1[i]),
