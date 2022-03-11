@@ -1933,7 +1933,7 @@ timeloop: do itime=1,itotal                     ! <A NAME="START OF TIME LOOP">
         !chlorophyll, nitrogen?, PAR,simpson-hunter parameter, uptake, growth          
         do i=1,N
           write(6,fmt="(i4,8f8.3)") iday,lon,lat,depth-(height(i)-dz/2.0),depth, &
-          temp_new(i),x_new(i),s_new(i), rad_mean(i),dlog10(depth/u3_mean)
+          temp_new(i),x_new(i),s_new(i),rad_mean(i),dlog10(depth/u3_mean)
         end do
       end if
 
