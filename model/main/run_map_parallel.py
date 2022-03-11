@@ -19,7 +19,7 @@ sim_directory = 'sims/test_profile/'
 num_procs = mp.cpu_count() # this will use all available processors. Note that on a multi-node machine it can only use the processors on one node
 # num_procs = 1 # The default is to use all available processors, but it is possible to specify the number of processors.
 
-output_directory = base_directory+sim_directory+'/output/'  #where you want the output to go (note you can specify the whole thing - no need for base_directory+ at the start)
+output_directory = base_directory+sim_directory+'output/'  #where you want the output to go (note you can specify the whole thing - no need for base_directory+ at the start)
 
 output_file_name = 'test_profile'
 meterological_file_name = 'meterological_data'
