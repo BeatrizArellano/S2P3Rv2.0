@@ -492,6 +492,7 @@ END MODULE GRAPHICS_VARIABLES
       character(len=100) :: initialdata2
       character(len=1) :: ans
       character(len=3) :: type
+      integer :: output_type
       character(len=300) :: domain_file
       character(len=300) :: nutrient_file
       character(len=12) :: lat_in_domain
@@ -603,6 +604,7 @@ END MODULE GRAPHICS_VARIABLES
         read(5,'(a36)')  unique_job_id
         read(5,'(a300)') met_data_location
         read(5,'(a3)') type
+        read(5,'(i1)') output_type
         read(5,*) iline
         read(5,'(f6.1)') smaj1
         read(5,'(f6.1)') smin1
@@ -638,7 +640,7 @@ END MODULE GRAPHICS_VARIABLES
         read(5,'(i1)') include_tpn1_output
         read(5,'(i1)') include_tpg1_output
         read(5,'(i1)') include_speed3_output
-        imode=1
+        imode=output_type
 
 ! 	do i = 1,iline
 ! 	read(1,'(16x,10f6.1)') smaj1, smin1, smaj2, smin2, smaj3, smin3, smaj4, smin4, smaj5, smin5
@@ -1008,6 +1010,7 @@ implicit none
 real alldepth
 integer :: run_year,start_year,iline
 character(len=3) :: type
+integer :: output_type
 character(len=12) :: lat_in_domain
 character(len=12) :: lon_in_domain
 character(len=36) :: unique_job_id
@@ -1035,6 +1038,7 @@ integer :: include_depth_output,include_temp_surface_output,include_temp_bottom_
         read(5,'(a36)')  unique_job_id
         read(5,'(a300)') met_data_location
         read(5,'(a3)') type
+        read(5,'(i1)') output_type
         read(5,*) iline
         read(5,'(f6.1)') smaj1
         read(5,'(f6.1)') smin1
@@ -1070,7 +1074,7 @@ integer :: include_depth_output,include_temp_surface_output,include_temp_bottom_
         read(5,'(i1)') include_tpn1_output
         read(5,'(i1)') include_tpg1_output
         read(5,'(i1)') include_speed3_output
-        imode=1
+        imode=output_type
 
 ! do i = 2,iline+1
 ! read(1,'(f8.3,f8.3,62x,f6.1)') lon,lat,alldepth
@@ -1120,7 +1124,7 @@ endif
 !open(1,file='s12_m2_s2_n2_h.dat',status='old')
 !open(1,file='s12_m2_s2_n2_h_sec.dat',status='old')
 !open(1,file='s12_m2_s2_n2_h_tim.dat',status='old')
-vismax=0.1; Nz_bg=1.0e-5; Kz_bg=1.0e-5; first_temp=25.0; lambda=0.1; heat_shade=0.012; bed_din=woa_nutrient; din_rate=10.0
+vismax=0.1; Nz_bg=1.0e-5; Kz_bg=1.0e-5; first_temp=12.0; lambda=0.1; heat_shade=0.012; bed_din=woa_nutrient; din_rate=10.0
 par_atten=0.1; par_percent=0.45
 uamp(1)=0.4; uamp(2:5)=0.0; uphase(1:5)=0.0; vphase(1:5)=0.0
 vamp(1:5)=0.0
@@ -1923,18 +1927,25 @@ timeloop: do itime=1,itotal                     ! <A NAME="START OF TIME LOOP">
 
 ! section output
       if(imode.eq.2) then
+      
+      	!Output daily data
+        !Format: Day, lon, lat, depth of the level, total depth, temperature
+        !chlorophyll, nitrogen?, PAR, uptake, growth          
+        do i=1,N
+          write(6,fmt="(i4,8f8.3)") iday,lon,lat,depth-(height(i)-dz/2.0),depth, &
+          temp_new(i),x_new(i),s_new(i), rad_mean(i)
+        end do
+      end if
 
 !		      OUTPUT SECTION DATA
 !                  *** CENTRED ON DAY 190 ***
-
-              if(iday.eq.190)then
-                do i=1,N
-                  write(6,fmt="(12f8.3)") lon,lat,dlog10(depth/u3_mean),height(i)-dz/2.0, &
-                  temp_new(i),x_new(i),ni_new(i),uptake1_mean(i),grow1_mean(i),s_new(i),height(i),dlog10(Kz_mean(i))
-                end do
-              end if
-
-              end if
+!              if(iday.eq.190)then
+!                do i=1,N
+!                  write(6,fmt="(12f8.3)") lon,lat,dlog10(depth/u3_mean),height(i)-dz/2.0, &
+!                  temp_new(i),x_new(i),ni_new(i),uptake1_mean(i),grow1_mean(i),s_new(i),height(i),dlog10(Kz_mean(i))
+!                end do
+!              end if
+!              end if
 
 ! time series output
 if(imode.eq.3) then
