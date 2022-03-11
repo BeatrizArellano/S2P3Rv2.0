@@ -88,6 +88,9 @@ column_names_all = ['depth','surface temperature','bottom temperature','surface 
 
 base_directory = base_directory + 'model/'
 
+from itertools import compress ### column_names is defined only if generate_netcdf_files is set to True
+column_names = ['day','longitude','latitude']+list(compress(column_names_all, map(bool,columns)))
+
 ##################################################
 # functions used by the script                   #
 ##################################################
