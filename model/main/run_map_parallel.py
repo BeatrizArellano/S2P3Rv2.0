@@ -6,6 +6,7 @@ import glob
 from math import cos, asin, sqrt
 import multiprocessing as mp
 from functools import partial
+from itertools import compress
 import uuid
 import time
 import pandas as pd
@@ -45,9 +46,9 @@ generate_netcdf_files = True
 #note does not output error data if write_error_output set to True
 
 #######################################################
-# Choose whether to output 2D or 3D data
-#  1. 2D data  (surface and/or depth)
-#  2. 3D data  (water column)
+# Choose whether to output 2D or 3D data              #
+#  1. 2D data  (surface and/or depth maps)            #
+#  2. 3D data  (water column)                         #
 #######################################################
 
 output_type = 1
@@ -60,6 +61,8 @@ output_type = 1
 #######################################################
 
 include_depth_output=1
+
+### Variables to output if the type of output is 2D
 include_temp_surface_output=1
 include_temp_bottom_output=1
 include_chlorophyll_surface_output=1
@@ -67,23 +70,65 @@ include_phyto_biomass_surface_output=0
 include_phyto_biomass_bottom_output=0
 include_PAR_surface_output=1 # daily mean surface of PAR W m-2
 include_PAR_bottom_output=1 # daily mean bottom of PAR W m-2
-include_windspeed_output=0 # windspeed
-include_stressx_output=0 # x component of surface wind drag
-include_stressy_output=0 # y component of surface wind drag
-include_Etide_output=0 # Mixing power in the tidal currents (assumes constant mixing efficiency 0.003)
-include_Ewind_output=0 # Mixing power in the wind (assumes constant mixing efficiency 0.023 and slippage factor=0.025)
 include_u_mean_surface_output=0 # daily mean surface u in cm/s !!
 include_u_mean_bottom_output=0 # daily mean bottom u in cm/s !!
 include_grow1_mean_surface_output=0 # daily mean growth rate d-1 surface
 include_grow1_mean_bottom_output=0 # daily mean growth rate d-1 bottom
 include_uptake1_mean_surface_output=0 # daily mean DIN uptake rate mmol DIN (mg C)-1 d-1 surface
 include_uptake1_mean_bottom_output=0 # daily mean DIN uptake rate mmol DIN (mg C)-1 d-1 bottom
-include_tpn1_output=0 # total water column net production / mg C m-2 d-1
-include_tpg1_output=0 # total water column gross production / mg C m-2 hd-1
-include_speed3_output=0	# depth-mean current speed
 
-columns = [include_depth_output,include_temp_surface_output,include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output]
-column_names_all = ['depth','surface temperature','bottom temperature','surface chlorophyll','surface phyto biomass','bottom phyto biomass','surface PAR','bottom PAR','windspeed','stress_x','stress_y','Etide','Ewind','u_mean_surface','u_mean_bottom','grow1_mean_surface','grow1_mean_bottom','uptake1_mean_surface','uptake1_mean_bottom','tpn1','tpg1','speed3']
+### Variables to output if the type of output is 3D
+include_temp_output=1
+include_chlorophyll_output=1
+include_phyto_biomass_output=1
+include_PAR_output=1          # daily mean of PAR W m-2 at each depth level
+include_u_mean_output=0       # daily mean u in cm/s !!
+include_grow1_mean_output=0   # daily mean growth rate d-1
+include_uptake1_mean_output=0 # daily mean DIN uptake rate mmol DIN (mg C)-1 d-1
+include_din_output=1          # Dissolved Inorganic Nitrogen (mmol m-3)
+
+### Variables to output for both choices: 2D and 3D
+
+include_windspeed_output=1      # windspeed
+include_stressx_output=0        # x component of surface wind drag
+include_stressy_output=0        # y component of surface wind drag
+include_Etide_output=0          # Mixing power in the tidal currents (assumes constant mixing efficiency 0.003)
+include_Ewind_output=0          # Mixing power in the wind (assumes constant mixing efficiency 0.023 and slippage factor=0.025)
+include_tpn1_output=0           # total water column net production / mg C m-2 d-1
+include_tpg1_output=0           # total water column gross production / mg C m-2 hd-1
+include_speed3_output=0        	# depth-mean current speed
+include_simpson_hunter_output=1 # Simpson & Hunter stratification parameter dlog10(depth/u3_mean)
+
+###
+
+if output_type == 1:
+
+    columns = [include_depth_output,include_temp_surface_output,include_temp_bottom_output,include_chlorophyll_surface_output,\
+               include_phyto_biomass_surface_output,include_phyto_biomass_bottom_output,include_PAR_surface_output,\
+               include_PAR_bottom_output,include_u_mean_surface_output,include_u_mean_bottom_output,include_grow1_mean_surface_output,\
+               include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,\
+               include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,\
+               include_tpn1_output,include_tpg1_output,include_speed3_output,include_simpson_hunter_output]
+        
+    column_names_all = ['depth','surface temperature','bottom temperature','surface chlorophyll',\
+                        'surface phyto biomass','bottom phyto biomass','surface PAR','bottom PAR',\
+                        'u_mean_surface','u_mean_bottom','grow1_mean_surface','grow1_mean_bottom',\
+                        'uptake1_mean_surface','uptake1_mean_bottom','windspeed','stress_x','stress_y',\
+                        'Etide','Ewind','tpn1','tpg1','speed3','simpson_hunter']
+    column_names = ['day','longitude','latitude']+list(compress(column_names_all, map(bool,columns)))
+
+elif output_type == 2:
+    
+    columns = [include_depth_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,\
+               include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output,\
+               include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,\
+               include_tpn1_output,include_tpg1_output,include_speed3_output,include_simpson_hunter_output]
+        
+    column_names_all = ['total depth','temperature','chlorophyll','phyto biomass','PAR',\
+                        'u_mean','grow1_mean','uptake1_mean','DIN','windspeed','stress_x','stress_y',\
+                        'Etide','Ewind','tpn1','tpg1','speed3','simpson_hunter']
+    column_names = ['day','longitude','latitude','depth']+list(compress(column_names_all, map(bool,columns)))
+    
 
 base_directory = base_directory + 'model/'
 
@@ -95,9 +140,9 @@ if generate_netcdf_files:
     import numpy as np
     import iris
     import pandas as pd
-    from itertools import compress
+    #from itertools import compress
     from cf_units import Unit
-    column_names = ['day','longitude','latitude']+list(compress(column_names_all, map(bool,columns)))
+    #column_names = ['day','longitude','latitude']+list(compress(column_names_all, map(bool,columns)))
     specifying_names = False
     ## If specifying_names above is set to True, specify the below. If not, ignore ##
     standard_name=['sea_surface_temperature','sea_surface_temperature','sea_surface_temperature','sea_surface_temperature','sea_surface_temperature']
@@ -202,7 +247,7 @@ for i,line in enumerate(lines[1::]):
 
 
 
-def run_model(domain_file_name,lats_lons,year,start_year,unique_job_id,met_data_temporary_location,lon_domain,lat_domain,smaj1,smin1,smaj2,smin2,smaj3,smin3,smaj4,smin4,smaj5,smin5,woa_nutrient,alldepth,include_depth_output,include_temp_surface_output,include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,i):
+def run_model(domain_file_name,lats_lons,year,start_year,unique_job_id,met_data_temporary_location,lon_domain,lat_domain,smaj1,smin1,smaj2,smin2,smaj3,smin3,smaj4,smin4,smaj5,smin5,woa_nutrient,alldepth,include_depth_output,include_temp_surface_output,include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output,output_type,i):
     #modifying so that the fortran code looks for the correct met file, rather than us having to copy it into the working directory
     # lon,lat = return_domain_lon(base_directory+'domain/'+domain_file_name,i)
     lon_domain_tmp = float(lon_domain[i])
@@ -217,8 +262,6 @@ def run_model(domain_file_name,lats_lons,year,start_year,unique_job_id,met_data_
     '../domain/{}'.format(nutrient_file_name),
     unique_job_id,
     met_data_temporary_location,
-    'map',
-    str(output_type),
     str(i+1),
     str(smaj1[i]),
     str(smin1[i]),
@@ -254,6 +297,16 @@ def run_model(domain_file_name,lats_lons,year,start_year,unique_job_id,met_data_
     str(include_tpn1_output),
     str(include_tpg1_output),
     str(include_speed3_output),
+    str(include_simpson_hunter_output),
+    str(include_temp_output),
+    str(include_chlorophyll_output),
+    str(include_phyto_biomass_output),
+    str(include_PAR_output),
+    str(include_u_mean_output),
+    str(include_grow1_mean_output),
+    str(include_uptake1_mean_output),
+    str(include_din_output),
+    str(output_type),
     str(start_year),
     str(year),
     str(float(lat_domain[i])),
@@ -262,8 +315,6 @@ def run_model(domain_file_name,lats_lons,year,start_year,unique_job_id,met_data_
     '../domain/{}'.format(nutrient_file_name),
     unique_job_id,
     met_data_temporary_location,
-    'map',
-    str(output_type),
     str(i+1),
     str(smaj1[i]),
     str(smin1[i]),
@@ -299,6 +350,16 @@ def run_model(domain_file_name,lats_lons,year,start_year,unique_job_id,met_data_
     str(include_tpn1_output),
     str(include_tpg1_output),
     str(include_speed3_output),
+    str(include_simpson_hunter_output),
+    str(include_temp_output),
+    str(include_chlorophyll_output),
+    str(include_phyto_biomass_output),
+    str(include_PAR_output),
+    str(include_u_mean_output),
+    str(include_grow1_mean_output),
+    str(include_uptake1_mean_output),
+    str(include_din_output),
+    str(output_type),
     'EOF'
     ])
     # print(run_command
@@ -370,7 +431,7 @@ for year in range(start_year,end_year+1):
 
     if parallel_processing:
         pool = mp.Pool(processes=num_procs)
-        func = partial(run_model, domain_file_name, lats_lons, year, start_year, unique_job_id, met_data_temporary_location,lon_domain,lat_domain,smaj1,smin1,smaj2,smin2,smaj3,smin3,smaj4,smin4,smaj5,smin5,woa_nutrient,alldepth,include_depth_output,include_temp_surface_output,include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output)
+        func = partial(run_model, domain_file_name, lats_lons, year, start_year, unique_job_id, met_data_temporary_location,lon_domain,lat_domain,smaj1,smin1,smaj2,smin2,smaj3,smin3,smaj4,smin4,smaj5,smin5,woa_nutrient,alldepth,include_depth_output,include_temp_surface_output,include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output,output_type)
         # results,errors = pool.map(func, range(num_lines))
         results, errors = zip(*pool.map(func, range(len(lat_domain))))
         # results = pool.map(func, range(num_lines))
@@ -430,7 +491,7 @@ for year in range(start_year,end_year+1):
         # non parallel version
         with open(output_directory+output_file_name+'_'+str(year),'wb') as fout:
             for i in range(len(lat_domain)):
-                out,err = run_model(domain_file_name, lats_lons, year, start_year, unique_job_id, met_data_temporary_location,lon_domain,lat_domain,smaj1,smin1,smaj2,smin2,smaj3,smin3,smaj4,smin4,smaj5,smin5,woa_nutrient,alldepth,include_depth_output,include_temp_surface_output,include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,i)
+                out,err = run_model(domain_file_name, lats_lons, year, start_year, unique_job_id, met_data_temporary_location,lon_domain,lat_domain,smaj1,smin1,smaj2,smin2,smaj3,smin3,smaj4,smin4,smaj5,smin5,woa_nutrient,alldepth,include_depth_output,include_temp_surface_output,include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output,output_type,i)
                 fout.write(out)
 
 
