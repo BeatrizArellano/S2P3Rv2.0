@@ -417,18 +417,18 @@ for year in range(start_year,end_year+1):
             func = partial(output_netcdf,year,column_names,df,df_domain,specifying_names,standard_name,long_name,var_name,units,run_start_date, output_directory,output_file_name)
             my_log = zip(*pool.map(func, range(4,len(column_names))))
         else:
-            with open(output_directory+output_file_name+'_'+str(year),'w') as fout:
+            with open(output_directory+output_file_name+'_'+str(year),'wb') as fout:
                 for result in results:
                     fout.write(result)
             if write_error_output:
-                with open(output_directory+output_file_name+'_error_'+str(year),'w') as fout:
+                with open(output_directory+output_file_name+'_error_'+str(year),'wb') as fout:
                     for error in errors:
                         fout.write(error)
         pool.close()
 
     if not parallel_processing:
         # non parallel version
-        with open(output_directory+output_file_name+'_'+str(year),'w') as fout:
+        with open(output_directory+output_file_name+'_'+str(year),'wb') as fout:
             for i in range(len(lat_domain)):
                 out,err = run_model(domain_file_name, lats_lons, year, start_year, unique_job_id, met_data_temporary_location,lon_domain,lat_domain,smaj1,smin1,smaj2,smin2,smaj3,smin3,smaj4,smin4,smaj5,smin5,woa_nutrient,alldepth,include_depth_output,include_temp_surface_output,include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,i)
                 fout.write(out)
