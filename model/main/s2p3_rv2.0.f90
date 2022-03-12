@@ -491,8 +491,6 @@ END MODULE GRAPHICS_VARIABLES
       character(len=10) :: clock,zone
       character(len=100) :: initialdata2
       character(len=1) :: ans
-      character(len=3) :: type
-      integer :: output_type
       character(len=300) :: domain_file
       character(len=300) :: nutrient_file
       character(len=12) :: lat_in_domain
@@ -504,7 +502,10 @@ END MODULE GRAPHICS_VARIABLES
           include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,&
           include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,&
           include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,&
-          include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output
+          include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,&
+          include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,&
+          include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,&
+          include_din_output,output_type
 
 
 
@@ -603,8 +604,6 @@ END MODULE GRAPHICS_VARIABLES
         read(5,'(a300)') nutrient_file
         read(5,'(a36)')  unique_job_id
         read(5,'(a300)') met_data_location
-        read(5,'(a3)') type
-        read(5,'(i1)') output_type
         read(5,*) iline
         read(5,'(f6.1)') smaj1
         read(5,'(f6.1)') smin1
@@ -640,6 +639,16 @@ END MODULE GRAPHICS_VARIABLES
         read(5,'(i1)') include_tpn1_output
         read(5,'(i1)') include_tpg1_output
         read(5,'(i1)') include_speed3_output
+        read(5,'(i1)') include_simpson_hunter_output
+        read(5,'(i1)') include_temp_output
+        read(5,'(i1)') include_chlorophyll_output
+        read(5,'(i1)') include_phyto_biomass_output
+        read(5,'(i1)') include_PAR_output
+        read(5,'(i1)') include_u_mean_output
+        read(5,'(i1)') include_grow1_mean_output
+        read(5,'(i1)') include_uptake1_mean_output
+        read(5,'(i1)') include_din_output
+        read(5,'(i1)') output_type
         imode=output_type
 
 ! 	do i = 1,iline
@@ -1009,8 +1018,6 @@ implicit none
 
 real alldepth
 integer :: run_year,start_year,iline
-character(len=3) :: type
-integer :: output_type
 character(len=12) :: lat_in_domain
 character(len=12) :: lon_in_domain
 character(len=36) :: unique_job_id
@@ -1024,7 +1031,10 @@ integer :: include_depth_output,include_temp_surface_output,include_temp_bottom_
 			    include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,&
           include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,&
           include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,&
-          include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output
+          include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,&
+          include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,&
+          include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,&
+          include_din_output,output_type
 
 ! get lon, lat, depth
 
@@ -1037,8 +1047,6 @@ integer :: include_depth_output,include_temp_surface_output,include_temp_bottom_
         read(5,'(a300)') nutrient_file
         read(5,'(a36)')  unique_job_id
         read(5,'(a300)') met_data_location
-        read(5,'(a3)') type
-        read(5,'(i1)') output_type
         read(5,*) iline
         read(5,'(f6.1)') smaj1
         read(5,'(f6.1)') smin1
@@ -1074,6 +1082,16 @@ integer :: include_depth_output,include_temp_surface_output,include_temp_bottom_
         read(5,'(i1)') include_tpn1_output
         read(5,'(i1)') include_tpg1_output
         read(5,'(i1)') include_speed3_output
+        read(5,'(i1)') include_simpson_hunter_output
+        read(5,'(i1)') include_temp_output
+        read(5,'(i1)') include_chlorophyll_output
+        read(5,'(i1)') include_phyto_biomass_output
+        read(5,'(i1)') include_PAR_output
+        read(5,'(i1)') include_u_mean_output
+        read(5,'(i1)') include_grow1_mean_output
+        read(5,'(i1)') include_uptake1_mean_output
+        read(5,'(i1)') include_din_output
+        read(5,'(i1)') output_type
         imode=output_type
 
 ! do i = 2,iline+1
@@ -1925,15 +1943,87 @@ timeloop: do itime=1,itotal                     ! <A NAME="START OF TIME LOOP">
                     & phi,speed,w_stress,rad0,Qflux,x_new(n),Tchl,s_new(n),0.001*daily_net, &
                     & 0.001*daily_gross
 
-! section output
-      if(imode.eq.2) then
-      
+!  Output water column information
+      if(imode.eq.2) then      
       	!Output daily data
-        !Format: Day, lon, lat, depth of the level, total depth, temperature
-        !chlorophyll, nitrogen?, PAR,simpson-hunter parameter, uptake, growth          
+        !Format: Day, lon, lat, depth of the level, variables...         
         do i=1,N
-          write(6,fmt="(i4,8f8.3)") iday,lon,lat,depth-(height(i)-dz/2.0),depth, &
-          temp_new(i),x_new(i),s_new(i), rad_mean(i),dlog10(depth/u3_mean)
+           write(6,fmt="(i4,2f8.3,i4)",advance="no")iday,lon,lat,depth-(height(i)-dz/2.0)
+           
+           if(include_depth_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")depth
+	   end if
+	   
+	   if(include_temp_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")temp_new(i)
+	   end if
+	   
+	   if(include_chlorophyll_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")x_new(i)
+	   end if
+	   
+	   if(include_phyto_biomass_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")x_new(i)/chl_carbon
+	   end if
+	   
+	   if(include_PAR_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")rad_mean(i)
+	   end if
+	   
+	   if(include_u_mean_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")u_mean(i)
+	   end if
+	   
+	   if(include_grow1_mean_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")grow1_mean(i)
+	   end if
+	   
+	   if(include_uptake1_mean_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")uptake1_mean(i)
+	   end if
+	   
+	   if(include_din_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")s_new(i)
+	   end if
+	   
+	   if(include_windspeed_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")windspeed
+	   end if
+	   
+	   if(include_stressx_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")stressx
+	   end if
+	   
+	   if(include_stressy_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")stressy
+	   end if
+	   
+	   if(include_Etide_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")Etide
+	   end if
+	   
+	   if(include_Ewind_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")Ewind
+	   end if	   
+	   
+	   if(include_tpn1_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")tpn1
+	   end if
+
+	   if(include_tpg1_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")tpg1
+	   end if
+
+	   if(include_speed3_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")speed3
+	   end if
+
+	   if(include_simpson_hunter_output.eq.1) then
+	 	write(6,fmt="(1f8.3)",advance="no")dlog10(depth/u3_mean)
+	   end if
+
+	   write(6,fmt="()")
+
         end do
       end if
 
@@ -1976,102 +2066,106 @@ if(imode.eq.1) then
 !write(6,'(2f8.3,5f8.2)') lon,lat,depth,dlog10(depth/u3_mean),strat_jul,rad_sum/acount,month_net1+accumulated,bottom_phyto_biomass
 ! write(6,fmt="(i4,2f8.3,5f8.2)")iday,lon,lat,depth,temp_new(N),temp_new(1),x_new(N),x_new(1)/chl_carbon
 
-write(6,fmt="(i4,2f8.3)",advance="no")iday,lon,lat
-! to include additional variables add more if the template if statements copied bleow before write(6,fmt="()") and add to list where others defined etc
-! then add to run_map_parallel by extending the lists containing existing output variables
-! if(include_XXNEWXX_output.eq.1) then
-!   write(6,fmt="(1f8.2)",advance="no")XXNEWXX
-! end if
+	write(6,fmt="(i4,2f8.3)",advance="no")iday,lon,lat
+	! to include additional variables add more if the template if statements copied bleow before write(6,fmt="()") and add to list where others defined etc
+	! then add to run_map_parallel by extending the lists containing existing output variables
+	! if(include_XXNEWXX_output.eq.1) then
+	!   write(6,fmt="(1f8.2)",advance="no")XXNEWXX
+	! end if
 
-if(include_depth_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")depth
-end if
+	if(include_depth_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")depth
+	end if
 
-if(include_temp_surface_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")temp_new(N)
-end if
+	if(include_temp_surface_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")temp_new(N)
+	end if
 
-if(include_temp_bottom_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")temp_new(1)
-end if
+	if(include_temp_bottom_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")temp_new(1)
+	end if
 
-if(include_chlorophyll_surface_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")x_new(N)
-end if
+	if(include_chlorophyll_surface_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")x_new(N)
+	end if
 
-if(include_phyto_biomass_surface_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")x_new(N)/chl_carbon
-end if
+	if(include_phyto_biomass_surface_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")x_new(N)/chl_carbon
+	end if
 
-if(include_phyto_biomass_bottom_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")x_new(1)/chl_carbon
-end if
+	if(include_phyto_biomass_bottom_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")x_new(1)/chl_carbon
+	end if
 
-if(include_PAR_surface_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")rad_mean(N)
-end if
+	if(include_PAR_surface_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")rad_mean(N)
+	end if
 
-if(include_PAR_bottom_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")rad_mean(1)
-end if
+	if(include_PAR_bottom_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")rad_mean(1)
+	end if	
 
-if(include_windspeed_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")windspeed
-end if
+	if(include_u_mean_surface_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")u_mean(N)
+	end if
 
-if(include_stressx_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")stressx
-end if
+	if(include_u_mean_bottom_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")u_mean(1)
+	end if
 
-if(include_stressy_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")stressy
-end if
+	if(include_grow1_mean_surface_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")grow1_mean(N)
+	end if
 
-if(include_Etide_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")Etide
-end if
+	if(include_grow1_mean_bottom_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")grow1_mean(1)
+	end if
 
-if(include_Ewind_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")Ewind
-end if
+	if(include_uptake1_mean_surface_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")uptake1_mean(N)
+	end if
 
-if(include_u_mean_surface_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")u_mean(N)
-end if
+	if(include_uptake1_mean_bottom_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")uptake1_mean(1)
+	end if
+	
+	if(include_windspeed_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")windspeed
+	end if
 
-if(include_u_mean_bottom_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")u_mean(1)
-end if
+	if(include_stressx_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")stressx
+	end if
 
-if(include_grow1_mean_surface_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")grow1_mean(N)
-end if
+	if(include_stressy_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")stressy
+	end if
 
-if(include_grow1_mean_bottom_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")grow1_mean(1)
-end if
+	if(include_Etide_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")Etide
+	end if
 
-if(include_uptake1_mean_surface_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")uptake1_mean(N)
-end if
+	if(include_Ewind_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")Ewind
+	end if
 
-if(include_uptake1_mean_bottom_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")uptake1_mean(1)
-end if
+	if(include_tpn1_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")tpn1
+	end if
 
-if(include_tpn1_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")tpn1
-end if
+	if(include_tpg1_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")tpg1
+	end if
 
-if(include_tpg1_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")tpg1
-end if
+	if(include_speed3_output.eq.1) then
+	  write(6,fmt="(1f8.2)",advance="no")speed3
+	end if
 
-if(include_speed3_output.eq.1) then
-  write(6,fmt="(1f8.2)",advance="no")speed3
-end if
+	if(include_simpson_hunter_output.eq.1) then
+	  write(6,fmt="(1f8.3)",advance="no")dlog10(depth/u3_mean)
+	end if
 
-write(6,fmt="()")
+	write(6,fmt="()")
 
 ! ,5f8.2)")iday,lon,lat,depth,temp_new(N),temp_new(1),x_new(N),x_new(1)/chl_carbon
 ! write (*,"(3f8.3)",advance="no") a,b,c
