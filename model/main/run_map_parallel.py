@@ -15,7 +15,7 @@ import pandas as pd
 # you may need to change things here             #
 ##################################################
 
-base_directory = '/home/ph290/s2p3/S2P3Rv2.0/'
+base_directory = '../../'
 num_procs = mp.cpu_count() # this will use all available processors. Note that on a multi-node machine it can only use the processors on one node
 # num_procs = 1 # The default is to use all available processors, but it is possible to specify the number of processors.
 
