@@ -273,7 +273,9 @@ END MODULE GRAPHICS_VARIABLES
       include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,&
       include_grow1_mean_surface_output,include_grow1_mean_bottom_output,&
       include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,&
-      include_tpg1_output,include_speed3_output
+      include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,&
+      include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,include_u_mean_output,&
+      include_grow1_mean_output,include_uptake1_mean_output,include_din_output
 
 !
 !   Initialise Winteracter
@@ -286,7 +288,9 @@ END MODULE GRAPHICS_VARIABLES
       include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,&
       include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,&
       include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,&
-      include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output)
+      include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,&
+      include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,&
+      include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output)
       depth=newdepth; N=newN; dz=newdz
 !      print*, 'getting phyto defaults'
       call get_phyto_defaults()
@@ -353,7 +357,9 @@ END MODULE GRAPHICS_VARIABLES
       include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,&
       include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,&
       include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,&
-      include_tpg1_output,include_speed3_output
+      include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,&
+      include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,include_u_mean_output,&
+      include_grow1_mean_output,include_uptake1_mean_output,include_din_output
 
 
 !
@@ -366,7 +372,9 @@ END MODULE GRAPHICS_VARIABLES
               include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,&
               include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,&
               include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,&
-              include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output)
+              include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,&
+      	      include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,&
+              include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output)
               deallocate (contour_data,xdata,ydata,profile,au,bu,cu,du,ru,qu,tke,tkeold,eps)
 !
 !       Open required files for results, and write headers
@@ -437,7 +445,9 @@ END MODULE GRAPHICS_VARIABLES
 			    include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,&
 			    include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,&
           include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,&
-          include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output)
+          include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,&
+          include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,&
+          include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output)
 
               surface_out='surface'//unique_job_id//'.dat'; phys_profile_day='physday.dat'; bio_profile_day='biolday.dat';&
                monthly_out='monthly'//unique_job_id//'.dat'
@@ -469,7 +479,9 @@ END MODULE GRAPHICS_VARIABLES
           include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,&
           include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,&
           include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,&
-          include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output)
+          include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,&
+          include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,&
+          include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output)
       USE VARIABLES
       use physics
       use turbulence
@@ -1006,7 +1018,9 @@ subroutine get_physics_defaults(lat_in_domain,lon_in_domain,run_year,start_year,
 			    include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,&
 			    include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,&
 			    include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,&
-			    include_tpg1_output,include_speed3_output)
+			    include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,&
+			    include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,&
+      			    include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output)
 
 use physics
 use turbulence
@@ -1431,11 +1445,13 @@ Subroutine grazing()	! Get phytoplankton grazing parameters
 
      subroutine run_model(run_year,start_year,unique_job_id,iline,woa_nutrient,include_depth_output,include_temp_surface_output,&
 			    include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,&
-          include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,&
-          include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,&
-          include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,&
-          include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,&
-          include_tpg1_output,include_speed3_output)
+          		include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,&
+          		include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,&
+          		include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,&
+          		include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,&
+          		include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,&
+			include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,&
+      			include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output)
 
      use variables
      use variables_all
@@ -1473,7 +1489,9 @@ Subroutine grazing()	! Get phytoplankton grazing parameters
           include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,&
           include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,&
           include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,&
-          include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output
+          include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,&
+          include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,&
+          include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output
 
 
 !
