@@ -1966,7 +1966,7 @@ timeloop: do itime=1,itotal                     ! <A NAME="START OF TIME LOOP">
       	!Output daily data
         !Format: Day, lon, lat, depth of the level, variables...         
         do i=1,N
-           write(6,fmt="(i4,2f8.3,i4)",advance="no")iday,lon,lat,depth-(height(i)-dz/2.0)
+           write(6,fmt="(i4,3f8.3)",advance="no")iday,lon,lat,depth-(height(i)-dz/2.0)
            
            if(include_depth_output.eq.1) then
 	  	write(6,fmt="(1f8.2)",advance="no")depth
@@ -2037,7 +2037,7 @@ timeloop: do itime=1,itotal                     ! <A NAME="START OF TIME LOOP">
 	   end if
 
 	   if(include_simpson_hunter_output.eq.1) then
-	 	write(6,fmt="(1f8.3)",advance="no")dlog10(depth/u3_mean)
+	 	write(6,fmt="(1f8.2)",advance="no")dlog10(depth/u3_mean)
 	   end if
 
 	   write(6,fmt="()")
