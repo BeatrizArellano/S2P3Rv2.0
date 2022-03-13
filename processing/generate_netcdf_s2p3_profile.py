@@ -90,7 +90,7 @@ if output_type == 2:
         df = pd.read_csv(file,header=None,names=cols, delim_whitespace=True)
         df['time'] = pd.to_timedelta(df['day'],unit='days') + initialDate    
         df['longitude'] = df.longitude.apply(lon_to_180)    
-        df.drop(['day'], 1, inplace=True)
+        df.drop(labels=['day'],axis=1, inplace=True)
         ### Creates the bathymetry file and saves it as netcdf
         if i == 0 and bathymetry_var in cols and create_bathymetry:
             print('        Creating bathymetry file')
