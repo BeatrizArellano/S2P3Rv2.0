@@ -112,7 +112,7 @@ if output_type == 2:
                 var_df = df[[var]]
             xr_temp = var_df.to_xarray()
             xr_temp[var].attrs['units'] = units
-            if variables_all[var]['type'] == '2D':
+            if variables_all[var]['type'] == '3D':
                 xr_temp.depth.attrs['units'] = 'm'
             xr_temp.to_netcdf(f'{output_path}{var}_{file_id}_{year}.nc')
             del xr_temp
