@@ -106,7 +106,7 @@ if output_type == 2:
             print(f'       Processing {year} - {var}')
             units = variables_all[var]['units']
             if variables_all[var]['type'] == '2D':
-                var_df = df[df.depth==df.depth.min()][[var]]
+                var_df = df[df.index.get_level_values('depth')==df.index.get_level_values('depth').min()][[var]]
                 var_df.index = var_df.index.droplevel('depth')
             else:
                 var_df = df[[var]]
