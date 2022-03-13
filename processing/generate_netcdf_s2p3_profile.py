@@ -79,9 +79,10 @@ if output_type == 2:
     lon_to_180 = lambda x: x if x<=180 else x-360
     
     
-    files = sorted(glob.glob(input_path + file_id+'_19[8-9]?'))
+    files = sorted(glob.glob(input_path + file_id+'_[1-2][0-9][0-9][0-9]'))
     
-    for i,file in enumerate(files):    
+    for i,file in enumerate(files):
+        print(f'Processing file: {file.split("/")[-1]}')
         year = int(file.split('_')[-1])
         initialDate = pd.to_datetime(str(year-1)+'1231', format='%Y%m%d')
         df = pd.read_csv(file,header=None,names=cols, delim_whitespace=True)
@@ -90,6 +91,7 @@ if output_type == 2:
         df.drop(['day'], 1, inplace=True)
         ### Creates the bathymetry file and saves it as netcdf
         if i == 0 and bathymetry_var in cols and create_bathymetry:
+            print('        Creating bathymetry file')
             bath = df[(df.time==df.time.min())&(df.depth==df.depth.min())][['longitude','latitude',bathymetry_var]].reset_index(drop=True)
             bath.set_index(['latitude','longitude'], inplace=True)
             xr_bath = bath.to_xarray()
@@ -99,6 +101,7 @@ if output_type == 2:
         df.set_index(['time','latitude','longitude','depth'], inplace=True)
         ## Creates the netcdf file for each variable
         for var in variables_sel:
+            print(f'       Processing variable {var}')
             units = variables_all[var]['units']
             print(year,var)
             xr_temp = df[[var]].to_xarray()
