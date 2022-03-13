@@ -49,27 +49,29 @@ if output_type == 1:
 
 if output_type == 2:
 
-    variables_all = {'bathymetry': {'include':include_depth_output,'units':'m'},
-                     'temperature': {'include':include_temp_output,'units':'°C'},
-                     'chlorophyll': {'include':include_chlorophyll_output,'units':''},
-                     'phyto biomass': {'include':include_phyto_biomass_output,'units':''},
-                     'PAR': {'include':include_PAR_output,'units':''},
-                     'u_mean': {'include':include_u_mean_output,'units':''},
-                     'grow1_mean': {'include':include_grow1_mean_output,'units':''},
-                     'uptake1_mean': {'include':include_uptake1_mean_output,'units':''},
-                     'DIN': {'include':include_din_output,'units':'mmol m-3'},
-                     'windspeed': {'include':include_windspeed_output,'units':''},
-                     'stress_x': {'include':include_stressx_output,'units':''},
-                     'stress_y': {'include':include_stressy_output,'units':''},
-                     'Etide': {'include':include_Etide_output,'units':''},
-                     'Ewind': {'include':include_Ewind_output,'units':''},
-                     'tpn1': {'include':include_tpn1_output,'units':''},
-                     'tpg1': {'include':include_tpg1_output,'units':''},
-                     'speed3': {'include':include_speed3_output,'units':''},
-                     'simpson_hunter': {'include':include_simpson_hunter_output,'units':''}}
+    variables_all = {'bathymetry': {'include':include_depth_output,'units':'m','type':'2D'},
+                     'temperature': {'include':include_temp_output,'units':'°C','type':'3D'},
+                     'chlorophyll': {'include':include_chlorophyll_output,'units':'','type':'3D'},
+                     'phyto biomass': {'include':include_phyto_biomass_output,'units':'','type':'3D'},
+                     'PAR': {'include':include_PAR_output,'units':'','type':'3D'},
+                     'u_mean': {'include':include_u_mean_output,'units':'','type':'3D'},
+                     'grow1_mean': {'include':include_grow1_mean_output,'units':'','type':'3D'},
+                     'uptake1_mean': {'include':include_uptake1_mean_output,'units':'','type':'3D'},
+                     'DIN': {'include':include_din_output,'units':'mmol m-3','type':'3D'},
+                     'windspeed': {'include':include_windspeed_output,'units':'','type':'2D'},
+                     'stress_x': {'include':include_stressx_output,'units':'','type':'2D'},
+                     'stress_y': {'include':include_stressy_output,'units':'','type':'2D'},
+                     'Etide': {'include':include_Etide_output,'units':'','type':'2D'},
+                     'Ewind': {'include':include_Ewind_output,'units':'','type':'2D'},
+                     'tpn1': {'include':include_tpn1_output,'units':'','type':'2D'},
+                     'tpg1': {'include':include_tpg1_output,'units':'','type':'2D'},
+                     'speed3': {'include':include_speed3_output,'units':'','type':'2D'},
+                     'simpson_hunter': {'include':include_simpson_hunter_output,'units':'','type':'2D'}}
     
     variables_sel = [k for k,par in variables_all.items() if par['include']==1] ## Selected variables
     bathymetry_var = 'bathymetry'
+    variables_sel_no_bat = [k for k,par in variables_all.items() if par['include']==1 and k!=bathymetry_var]
+    
     
    
     
@@ -100,13 +102,18 @@ if output_type == 2:
         
         df.set_index(['time','latitude','longitude','depth'], inplace=True)
         ## Creates the netcdf file for each variable
-        for var in variables_sel:
-            print(f'       Processing variable {var}')
+        for var in variables_sel_no_bat:
+            print(f'       Processing {year} - {var}')
             units = variables_all[var]['units']
-            print(year,var)
-            xr_temp = df[[var]].to_xarray()
+            if variables_all[var]['type'] == '2D':
+                var_df = df[df.depth==df.depth.min()][[var]]
+                var_df.index = var_df.index.droplevel('depth')
+            else:
+                var_df = df[[var]]
+            xr_temp = var_df.to_xarray()
             xr_temp[var].attrs['units'] = units
-            xr_temp.depth.attrs['units'] = 'm'
+            if variables_all[var]['type'] == '2D':
+                xr_temp.depth.attrs['units'] = 'm'
             xr_temp.to_netcdf(f'{output_path}{var}_{file_id}_{year}.nc')
             del xr_temp
         del df
