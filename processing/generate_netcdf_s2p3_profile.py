@@ -52,7 +52,7 @@ if output_type == 2:
     variables_all = {'bathymetry': {'include':include_depth_output,'units':'m','type':'2D'},
                      'temperature': {'include':include_temp_output,'units':'°C','type':'3D'},
                      'chlorophyll': {'include':include_chlorophyll_output,'units':'','type':'3D'},
-                     'phyto biomass': {'include':include_phyto_biomass_output,'units':'','type':'3D'},
+                     'phyto_biomass': {'include':include_phyto_biomass_output,'units':'','type':'3D'},
                      'PAR': {'include':include_PAR_output,'units':'','type':'3D'},
                      'u_mean': {'include':include_u_mean_output,'units':'','type':'3D'},
                      'grow1_mean': {'include':include_grow1_mean_output,'units':'','type':'3D'},
