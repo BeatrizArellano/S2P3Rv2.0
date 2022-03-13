@@ -103,12 +103,12 @@ if output_type == 2:
         df.set_index(['time','latitude','longitude','depth'], inplace=True)
         ## Creates the netcdf file for each variable
         for var in variables_sel_no_bat:
-            print(f'       Processing {year} - {var}')
+            print(f'       Processing {year} - {var} - {variables_all[var]["type"]}')
             units = variables_all[var]['units']
             if variables_all[var]['type'] == '2D':
                 var_df = df[df.index.get_level_values('depth')==df.index.get_level_values('depth').min()][[var]]
                 var_df.index = var_df.index.droplevel('depth')
-            else:
+            elif variables_all[var]['type'] == '3D':
                 var_df = df[[var]]
             xr_temp = var_df.to_xarray()
             xr_temp[var].attrs['units'] = units
