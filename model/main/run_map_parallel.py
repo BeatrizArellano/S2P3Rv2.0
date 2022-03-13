@@ -16,29 +16,29 @@ import pandas as pd
 ##################################################
 
 base_directory = '../../'
-sim_directory = 'sims/test_profile/'
+sim_directory = 'sims/NW_Eur/normal_forcing/'
 num_procs = mp.cpu_count() # this will use all available processors. Note that on a multi-node machine it can only use the processors on one node
 # num_procs = 1 # The default is to use all available processors, but it is possible to specify the number of processors.
 
 output_directory = base_directory+sim_directory+'output/'  #where you want the output to go (note you can specify the whole thing - no need for base_directory+ at the start)
 
-output_file_name = 'test_profile'
+output_file_name = 'NW_Eur'
 meterological_file_name = 'meterological_data'
-domain_file_name = 's12_m2_s2_n2_h_map_UK.dat'
-nutrient_file_name = 'initial_nitrate.dat'
+domain_file_name = 's12_m2_s2_n2_h_map_NW_Eur.dat'
+nutrient_file_name = 'initial_nitrate_NW_Eur.dat'
 executable_file_name = 's2p3_rv2.0'
 
 met_data_location = base_directory+sim_directory+'met_data/processed/' # The location containing the tar.gz met files (in the format met_data_year.tar.gz)
 
-met_data_temporary_location = '/mnt/ramd_test-profile/'
+met_data_temporary_location = '/mnt/ramd_NW_Eur/'
 #met_data_temporary_location = '../met/' # The location that met data for each year will be un tar.gziped into
 # each grid point each year has to read in a new meterology dataset from disk so it may make sense to make this temporary location a RAM disk (see readme)
 
-start_year = 2000
+start_year = 1901
 
 end_year = 2010 # same as start year resuls in a 1 year run
 depth_min = 10.0 # NOTE that these numbers MUST be the same as those used in the scripts used to produce the meterology and nutrient files, otherwse data will not be taken for teh correct lats/lons and/or the script will fail
-depth_max = 100.0
+depth_max = 120.0
 write_error_output = False
 
 parallel_processing = True
@@ -83,20 +83,20 @@ include_temp_output=1
 include_chlorophyll_output=1
 include_phyto_biomass_output=1
 include_PAR_output=1          # daily mean of PAR W m-2 at each depth level
-include_u_mean_output=0       # daily mean u in cm/s !!
-include_grow1_mean_output=0   # daily mean growth rate d-1
-include_uptake1_mean_output=0 # daily mean DIN uptake rate mmol DIN (mg C)-1 d-1
+include_u_mean_output=1       # daily mean u in cm/s !!
+include_grow1_mean_output=1   # daily mean growth rate d-1
+include_uptake1_mean_output=1 # daily mean DIN uptake rate mmol DIN (mg C)-1 d-1
 include_din_output=1          # Dissolved Inorganic Nitrogen (mmol m-3)
 
 ### Variables to output for both choices: 2D and 3D
 
 include_windspeed_output=1      # windspeed
-include_stressx_output=0        # x component of surface wind drag
-include_stressy_output=0        # y component of surface wind drag
-include_Etide_output=0          # Mixing power in the tidal currents (assumes constant mixing efficiency 0.003)
-include_Ewind_output=0          # Mixing power in the wind (assumes constant mixing efficiency 0.023 and slippage factor=0.025)
-include_tpn1_output=0           # total water column net production / mg C m-2 d-1
-include_tpg1_output=0           # total water column gross production / mg C m-2 hd-1
+include_stressx_output=1        # x component of surface wind drag
+include_stressy_output=1        # y component of surface wind drag
+include_Etide_output=1          # Mixing power in the tidal currents (assumes constant mixing efficiency 0.003)
+include_Ewind_output=1          # Mixing power in the wind (assumes constant mixing efficiency 0.023 and slippage factor=0.025)
+include_tpn1_output=1           # total water column net production / mg C m-2 d-1
+include_tpg1_output=1           # total water column gross production / mg C m-2 hd-1
 include_speed3_output=0        	# depth-mean current speed
 include_simpson_hunter_output=1 # Simpson & Hunter stratification parameter dlog10(depth/u3_mean)
 
