@@ -84,8 +84,8 @@ include_chlorophyll_output=1
 include_phyto_biomass_output=1
 include_PAR_output=1          # daily mean of PAR W m-2 at each depth level
 include_u_mean_output=1       # daily mean u in cm/s !!
-include_grow1_mean_output=1   # daily mean growth rate d-1
-include_uptake1_mean_output=1 # daily mean DIN uptake rate mmol DIN (mg C)-1 d-1
+include_grow1_mean_output=0   # daily mean growth rate d-1
+include_uptake1_mean_output=0 # daily mean DIN uptake rate mmol DIN (mg C)-1 d-1
 include_din_output=1          # Dissolved Inorganic Nitrogen (mmol m-3)
 
 ### Variables to output for both choices: 2D and 3D
