@@ -17,8 +17,9 @@ import pandas as pd
 
 base_directory = '../../'
 sim_directory = 'sims/NW_Eur/normal_forcing/'
-num_procs = mp.cpu_count() # this will use all available processors. Note that on a multi-node machine it can only use the processors on one node
+# num_procs = mp.cpu_count() # this will use all available processors. Note that on a multi-node machine it can only use the processors on one node
 # num_procs = 1 # The default is to use all available processors, but it is possible to specify the number of processors.
+num_procs = int(mp.cpu_count()*2/3) 
 
 output_directory = base_directory+sim_directory+'output/'  #where you want the output to go (note you can specify the whole thing - no need for base_directory+ at the start)
 
@@ -95,8 +96,8 @@ include_stressx_output=1        # x component of surface wind drag
 include_stressy_output=1        # y component of surface wind drag
 include_Etide_output=1          # Mixing power in the tidal currents (assumes constant mixing efficiency 0.003)
 include_Ewind_output=1          # Mixing power in the wind (assumes constant mixing efficiency 0.023 and slippage factor=0.025)
-include_tpn1_output=1           # total water column net production / mg C m-2 d-1
-include_tpg1_output=1           # total water column gross production / mg C m-2 hd-1
+include_tpn1_output=0           # total water column net production / mg C m-2 d-1
+include_tpg1_output=0           # total water column gross production / mg C m-2 hd-1
 include_speed3_output=0        	# depth-mean current speed
 include_simpson_hunter_output=1 # Simpson & Hunter stratification parameter dlog10(depth/u3_mean)
 
