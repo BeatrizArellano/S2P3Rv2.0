@@ -67,37 +67,37 @@ include_depth_output=1
 include_temp_surface_output=1
 include_temp_bottom_output=1
 include_chlorophyll_surface_output=1
-include_phyto_biomass_surface_output=0
-include_phyto_biomass_bottom_output=0
+include_phyto_biomass_surface_output=1
+include_phyto_biomass_bottom_output=1
 include_PAR_surface_output=1 # daily mean surface of PAR W m-2
 include_PAR_bottom_output=1 # daily mean bottom of PAR W m-2
-include_u_mean_surface_output=0 # daily mean surface u in cm/s !!
-include_u_mean_bottom_output=0 # daily mean bottom u in cm/s !!
-include_grow1_mean_surface_output=0 # daily mean growth rate d-1 surface
-include_grow1_mean_bottom_output=0 # daily mean growth rate d-1 bottom
-include_uptake1_mean_surface_output=0 # daily mean DIN uptake rate mmol DIN (mg C)-1 d-1 surface
-include_uptake1_mean_bottom_output=0 # daily mean DIN uptake rate mmol DIN (mg C)-1 d-1 bottom
+include_u_mean_surface_output=1 # daily mean surface u in cm/s !!
+include_u_mean_bottom_output=1 # daily mean bottom u in cm/s !!
+include_grow1_mean_surface_output=1 # daily mean growth rate d-1 surface
+include_grow1_mean_bottom_output=1 # daily mean growth rate d-1 bottom
+include_uptake1_mean_surface_output=1 # daily mean DIN uptake rate mmol DIN (mg C)-1 d-1 surface
+include_uptake1_mean_bottom_output=1 # daily mean DIN uptake rate mmol DIN (mg C)-1 d-1 bottom
 
 ### Variables to output if the type of output is 3D
 include_temp_output=1
 include_chlorophyll_output=1
 include_phyto_biomass_output=1
 include_PAR_output=1          # daily mean of PAR W m-2 at each depth level
-include_u_mean_output=0       # daily mean u in cm/s !!
-include_grow1_mean_output=0   # daily mean growth rate d-1
-include_uptake1_mean_output=0 # daily mean DIN uptake rate mmol DIN (mg C)-1 d-1
+include_u_mean_output=1       # daily mean u in cm/s !!
+include_grow1_mean_output=1   # daily mean growth rate d-1
+include_uptake1_mean_output=1 # daily mean DIN uptake rate mmol DIN (mg C)-1 d-1
 include_din_output=1          # Dissolved Inorganic Nitrogen (mmol m-3)
 
 ### Variables to output for both choices: 2D and 3D
 
 include_windspeed_output=1      # windspeed
-include_stressx_output=0        # x component of surface wind drag
-include_stressy_output=0        # y component of surface wind drag
-include_Etide_output=0          # Mixing power in the tidal currents (assumes constant mixing efficiency 0.003)
-include_Ewind_output=0          # Mixing power in the wind (assumes constant mixing efficiency 0.023 and slippage factor=0.025)
-include_tpn1_output=0           # total water column net production / mg C m-2 d-1
-include_tpg1_output=0           # total water column gross production / mg C m-2 hd-1
-include_speed3_output=0        	# depth-mean current speed
+include_stressx_output=1        # x component of surface wind drag
+include_stressy_output=1        # y component of surface wind drag
+include_Etide_output=1          # Mixing power in the tidal currents (assumes constant mixing efficiency 0.003)
+include_Ewind_output=1          # Mixing power in the wind (assumes constant mixing efficiency 0.023 and slippage factor=0.025)
+include_tpn1_output=1           # total water column net production / mg C m-2 d-1
+include_tpg1_output=1           # total water column gross production / mg C m-2 hd-1
+include_speed3_output=1        	# depth-mean current speed
 include_simpson_hunter_output=1 # Simpson & Hunter stratification parameter dlog10(depth/u3_mean)
 
 ###
