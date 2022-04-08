@@ -104,13 +104,13 @@ def land_fill(mask_cube,cubes):
 
 output_filename = 'meterological_data'
 
-if len(glob.glob(output_directory+output_filename+'*.dat')) <> 0:
+if len(glob.glob(output_directory+output_filename+'*.dat')) != 0:
     print('files already exist in the output directory. Please move, delete or point output to a new directory')
     print('first file')
     print(glob.glob(output_directory+output_filename+'*.dat')[0])
     sys.exit()
 
-if len(glob.glob(output_directory+'met_data_*.tar.gz')) <> 0:
+if len(glob.glob(output_directory+'met_data_*.tar.gz')) != 0:
     print('files already exist in the output directory. Please move, delete or point output to a new directory')
     print('first file')
     print(glob.glob(output_directory+'met_data_*.tar.gz')[0])
