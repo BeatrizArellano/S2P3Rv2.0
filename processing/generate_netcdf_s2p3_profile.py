@@ -84,36 +84,37 @@ if output_type == 2:
     files = sorted(glob.glob(input_path + file_id+'_[1-2][0-9][0-9][0-9]'))
     
     for i,file in enumerate(files):
-        print(f'Processing file: {file.split("/")[-1]}')
-        year = int(file.split('_')[-1])
-        initialDate = pd.to_datetime(str(year-1)+'1231', format='%Y%m%d')
-        df = pd.read_csv(file,header=None,names=cols, delim_whitespace=True)
-        df['time'] = pd.to_timedelta(df['day'],unit='days') + initialDate    
-        df['longitude'] = df.longitude.apply(lon_to_180)    
-        df.drop(labels=['day'],axis=1, inplace=True)
-        ### Creates the bathymetry file and saves it as netcdf
-        if i == 0 and bathymetry_var in cols and create_bathymetry:
-            print('        Creating bathymetry file')
-            bath = df[(df.time==df.time.min())&(df.depth==df.depth.min())][['longitude','latitude',bathymetry_var]].reset_index(drop=True)
-            bath.set_index(['latitude','longitude'], inplace=True)
-            xr_bath = bath.to_xarray()
-            xr_bath.bathymetry.attrs['units'] = 'm'        
-            xr_bath.to_netcdf(f'{output_path}{bathymetry_var}_{file_id}.nc')
-        
-        df.set_index(['time','latitude','longitude','depth'], inplace=True)
-        ## Creates the netcdf file for each variable
-        for var in variables_sel_no_bat:
-            print(f'       Processing {year} - {var} - {variables_all[var]["type"]}')
-            units = variables_all[var]['units']
-            if variables_all[var]['type'] == '2D':
-                var_df = df[df.index.get_level_values('depth')==df.index.get_level_values('depth').min()][[var]]
-                var_df.index = var_df.index.droplevel('depth')
-            elif variables_all[var]['type'] == '3D':
-                var_df = df[[var]]
-            xr_temp = var_df.to_xarray()
-            xr_temp[var].attrs['units'] = units
-            if variables_all[var]['type'] == '3D':
-                xr_temp.depth.attrs['units'] = 'm'
-            xr_temp.to_netcdf(f'{output_path}{var}_{file_id}_{year}.nc')
-            del xr_temp, var_df
-        del df
+        if int(file.split("/")[-1][-4::]) > 1937:
+            print(f'Processing file: {file.split("/")[-1]}')
+            year = int(file.split('_')[-1])
+            initialDate = pd.to_datetime(str(year-1)+'1231', format='%Y%m%d')
+            df = pd.read_csv(file,header=None,names=cols, delim_whitespace=True)
+            df['time'] = pd.to_timedelta(df['day'],unit='days') + initialDate    
+            df['longitude'] = df.longitude.apply(lon_to_180)    
+            df.drop(labels=['day'],axis=1, inplace=True)
+            ### Creates the bathymetry file and saves it as netcdf
+            if i == 0 and bathymetry_var in cols and create_bathymetry:
+                print('        Creating bathymetry file')
+                bath = df[(df.time==df.time.min())&(df.depth==df.depth.min())][['longitude','latitude',bathymetry_var]].reset_index(drop=True)
+                bath.set_index(['latitude','longitude'], inplace=True)
+                xr_bath = bath.to_xarray()
+                xr_bath.bathymetry.attrs['units'] = 'm'        
+                xr_bath.to_netcdf(f'{output_path}{bathymetry_var}_{file_id}.nc')
+            
+            df.set_index(['time','latitude','longitude','depth'], inplace=True)
+            ## Creates the netcdf file for each variable
+            for var in variables_sel_no_bat:
+                print(f'       Processing {year} - {var} - {variables_all[var]["type"]}')
+                units = variables_all[var]['units']
+                if variables_all[var]['type'] == '2D':
+                    var_df = df[df.index.get_level_values('depth')==df.index.get_level_values('depth').min()][[var]]
+                    var_df.index = var_df.index.droplevel('depth')
+                elif variables_all[var]['type'] == '3D':
+                    var_df = df[[var]]
+                xr_temp = var_df.to_xarray()
+                xr_temp[var].attrs['units'] = units
+                if variables_all[var]['type'] == '3D':
+                    xr_temp.depth.attrs['units'] = 'm'
+                xr_temp.to_netcdf(f'{output_path}{var}_{file_id}_{year}.nc')
+                del xr_temp, var_df
+            del df
