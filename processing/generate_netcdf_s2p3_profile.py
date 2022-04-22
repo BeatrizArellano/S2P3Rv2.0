@@ -22,9 +22,9 @@ from run_map_parallel import output_type,include_depth_output,include_temp_surfa
                
 create_bathymetry = True
 
-input_path = '../sims/test_profile/output/'
-output_path = '../sims/test_profile/output/netcdf/'
-file_id = 'test_profile'
+input_path = '../sims/NW_Eur/control/output/'
+output_path = '../sims/NW_Eur/control/output/netcdf/'
+file_id = 'NW_Eur'
 
 
 if output_type == 1:
