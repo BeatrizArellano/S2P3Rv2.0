@@ -22,9 +22,9 @@ from run_map_parallel import output_type,include_depth_output,include_temp_surfa
                
 create_bathymetry = True
 
-input_path = '../sims/test_profile/output/'
-output_path = '../sims/test_profile/output/netcdf/'
-file_id = 'test_profile'
+input_path = '/data/local_ssd/ra499/sims/NW_Eur/constant_wind_speed/output/'
+output_path = '/data/local_ssd/ra499/sims/NW_Eur/constant_wind_speed/output/netcdf/'
+file_id = 'NW_const_ws'
 
 
 if output_type == 1:
