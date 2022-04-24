@@ -49,24 +49,24 @@ if output_type == 1:
 
 if output_type == 2:
 
-    variables_all = {'bathymetry': {'include':include_depth_output,'units':'m','type':'2D',netcdf=True},
-                     'temperature': {'include':include_temp_output,'units':'°C','type':'3D',netcdf=True},
-                     'chlorophyll': {'include':include_chlorophyll_output,'units':'','type':'3D',netcdf=False},
-                     'phyto_biomass': {'include':include_phyto_biomass_output,'units':'','type':'3D',netcdf=False},
-                     'PAR': {'include':include_PAR_output,'units':'','type':'3D',netcdf=False},
-                     'u_mean': {'include':include_u_mean_output,'units':'','type':'3D',netcdf=False},
-                     'grow1_mean': {'include':include_grow1_mean_output,'units':'','type':'3D',netcdf=False},
-                     'uptake1_mean': {'include':include_uptake1_mean_output,'units':'','type':'3D',netcdf=False},
-                     'DIN': {'include':include_din_output,'units':'mmol m-3','type':'3D',netcdf=False},
-                     'windspeed': {'include':include_windspeed_output,'units':'','type':'2D',netcdf=True},
-                     'stress_x': {'include':include_stressx_output,'units':'','type':'2D',netcdf=False},
-                     'stress_y': {'include':include_stressy_output,'units':'','type':'2D',netcdf=False},
-                     'Etide': {'include':include_Etide_output,'units':'','type':'2D',netcdf=False},
-                     'Ewind': {'include':include_Ewind_output,'units':'','type':'2D',netcdf=False},
-                     'tpn1': {'include':include_tpn1_output,'units':'','type':'2D',netcdf=False},
-                     'tpg1': {'include':include_tpg1_output,'units':'','type':'2D',netcdf=False},
-                     'speed3': {'include':include_speed3_output,'units':'','type':'2D',netcdf=False},
-                     'simpson_hunter': {'include':include_simpson_hunter_output,'units':'','type':'2D',netcdf=True}}
+    variables_all = {'bathymetry': {'include':include_depth_output,'units':'m','type':'2D','netcdf':True},
+                     'temperature': {'include':include_temp_output,'units':'°C','type':'3D','netcdf':True},
+                     'chlorophyll': {'include':include_chlorophyll_output,'units':'','type':'3D','netcdf':False},
+                     'phyto_biomass': {'include':include_phyto_biomass_output,'units':'','type':'3D','netcdf':False},
+                     'PAR': {'include':include_PAR_output,'units':'','type':'3D','netcdf':False},
+                     'u_mean': {'include':include_u_mean_output,'units':'','type':'3D','netcdf':False},
+                     'grow1_mean': {'include':include_grow1_mean_output,'units':'','type':'3D','netcdf':False},
+                     'uptake1_mean': {'include':include_uptake1_mean_output,'units':'','type':'3D','netcdf':False},
+                     'DIN': {'include':include_din_output,'units':'mmol m-3','type':'3D','netcdf':False},
+                     'windspeed': {'include':include_windspeed_output,'units':'','type':'2D','netcdf':True},
+                     'stress_x': {'include':include_stressx_output,'units':'','type':'2D','netcdf':False},
+                     'stress_y': {'include':include_stressy_output,'units':'','type':'2D','netcdf':False},
+                     'Etide': {'include':include_Etide_output,'units':'','type':'2D','netcdf':False},
+                     'Ewind': {'include':include_Ewind_output,'units':'','type':'2D','netcdf':False},
+                     'tpn1': {'include':include_tpn1_output,'units':'','type':'2D','netcdf':False},
+                     'tpg1': {'include':include_tpg1_output,'units':'','type':'2D','netcdf':False},
+                     'speed3': {'include':include_speed3_output,'units':'','type':'2D','netcdf':False},
+                     'simpson_hunter': {'include':include_simpson_hunter_output,'units':'','type':'2D','netcdf':True}}
     
     variables_sel = [k for k,par in variables_all.items() if par['include']==1] ## Selected variables
     bathymetry_var = 'bathymetry'
