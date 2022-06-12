@@ -22,9 +22,9 @@ from run_map_parallel import output_type,include_depth_output,include_temp_surfa
                
 create_bathymetry = True
 
-input_path = '/data/local_ssd/ra499/sims/NW_Eur/constant_wind_speed/output/'
-output_path = '/data/local_ssd/ra499/sims/NW_Eur/constant_wind_speed/output/netcdf/'
-file_id = 'NW_const_ws'
+input_path = '/data/local_ssd/ra499/sims/NW_Eur/constant_rlds/output/'
+output_path = '/data/local_ssd/ra499/sims/NW_Eur/constant_rlds/output/netcdf/'
+file_id = 'NW_const_rlds'
 
 
 if output_type == 1:
@@ -49,7 +49,7 @@ if output_type == 1:
 
 if output_type == 2:
 
-    variables_all = {'bathymetry': {'include':include_depth_output,'units':'m','type':'2D','netcdf':True},
+    variables_all = {'bathymetry': {'include':include_depth_output,'units':'m','type':'2D','netcdf':False},
                      'temperature': {'include':include_temp_output,'units':'°C','type':'3D','netcdf':True},
                      'chlorophyll': {'include':include_chlorophyll_output,'units':'','type':'3D','netcdf':False},
                      'phyto_biomass': {'include':include_phyto_biomass_output,'units':'','type':'3D','netcdf':False},
@@ -58,7 +58,7 @@ if output_type == 2:
                      'grow1_mean': {'include':include_grow1_mean_output,'units':'','type':'3D','netcdf':False},
                      'uptake1_mean': {'include':include_uptake1_mean_output,'units':'','type':'3D','netcdf':False},
                      'DIN': {'include':include_din_output,'units':'mmol m-3','type':'3D','netcdf':False},
-                     'windspeed': {'include':include_windspeed_output,'units':'','type':'2D','netcdf':True},
+                     'windspeed': {'include':include_windspeed_output,'units':'','type':'2D','netcdf':False},
                      'stress_x': {'include':include_stressx_output,'units':'','type':'2D','netcdf':False},
                      'stress_y': {'include':include_stressy_output,'units':'','type':'2D','netcdf':False},
                      'Etide': {'include':include_Etide_output,'units':'','type':'2D','netcdf':False},
