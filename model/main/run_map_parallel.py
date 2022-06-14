@@ -23,7 +23,7 @@ num_procs = int(mp.cpu_count()*2/3)
 
 output_directory = '/data/local_ssd/ra499/' + sim_directory + 'output/'  #where you want the output to go (note you can specify the whole thing - no need for base_directory+ at the start)
 
-output_file_name = 'NW_const_rlds'
+output_file_name = 'NW_const_tas'
 meterological_file_name = 'meterological_data'
 domain_file_name = 's12_m2_s2_n2_h_map_NW_Eur.dat'
 nutrient_file_name = 'initial_nitrate_NW_Eur.dat'
