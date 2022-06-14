@@ -16,7 +16,7 @@ import pandas as pd
 ##################################################
 
 base_directory = '../../'
-sim_directory = 'sims/NW_Eur/constant_rlds/'
+sim_directory = 'sims/NW_Eur/constant_tas/'
 # num_procs = mp.cpu_count() # this will use all available processors. Note that on a multi-node machine it can only use the processors on one node
 # num_procs = 1 # The default is to use all available processors, but it is possible to specify the number of processors.
 num_procs = int(mp.cpu_count()*2/3) 
