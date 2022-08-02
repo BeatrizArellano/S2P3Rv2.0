@@ -19,9 +19,9 @@ base_directory = '../../'
 sim_directory = 'sims/NW_Eur/constant_tas_ws/'
 # num_procs = mp.cpu_count() # this will use all available processors. Note that on a multi-node machine it can only use the processors on one node
 # num_procs = 1 # The default is to use all available processors, but it is possible to specify the number of processors.
-num_procs = int(mp.cpu_count()*2/3) 
+num_procs = int(mp.cpu_count()*4/5) 
 
-output_directory = '/data/local_ssd/ra499/' + sim_directory + 'output/'  #where you want the output to go (note you can specify the whole thing - no need for base_directory+ at the start)
+output_directory = '/massive/ra499/' + sim_directory + 'output/'  #where you want the output to go (note you can specify the whole thing - no need for base_directory+ at the start)
 
 output_file_name = 'NW_const_tas_ws'
 meterological_file_name = 'meterological_data'
@@ -29,9 +29,9 @@ domain_file_name = 's12_m2_s2_n2_h_map_NW_Eur.dat'
 nutrient_file_name = 'initial_nitrate_NW_Eur.dat'
 executable_file_name = 's2p3_rv2.0'
 
-met_data_location = base_directory+sim_directory+'met_data/processed/' # The location containing the tar.gz met files (in the format met_data_year.tar.gz)
+met_data_location = '/massive/ra499/'+sim_directory+'met_data/processed/' # The location containing the tar.gz met files (in the format met_data_year.tar.gz)
 
-met_data_temporary_location = '/mnt/ramd_NW_Eur/'
+met_data_temporary_location = '/mnt/ramdisk/s2p3_nwe/'
 #met_data_temporary_location = '../met/' # The location that met data for each year will be un tar.gziped into
 # each grid point each year has to read in a new meterology dataset from disk so it may make sense to make this temporary location a RAM disk (see readme)
 
