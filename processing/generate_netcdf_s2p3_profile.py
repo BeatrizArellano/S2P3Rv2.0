@@ -22,8 +22,8 @@ from run_map_parallel import output_type,include_depth_output,include_temp_surfa
                
 create_bathymetry = False
 
-input_path = '/data/local_ssd/ra499/sims/NW_Eur/constant_tas_ws/output/'
-output_path = '/data/local_ssd/ra499/sims/NW_Eur/constant_tas_ws/output/netcdf/'
+input_path = '/massive/ra499/sims/NW_Eur/constant_tas_ws/output/'
+output_path = '/massive/ra499/sims/NW_Eur/constant_tas_ws/output/netcdf/'
 file_id = 'NW_const_tas_ws'
 
 
