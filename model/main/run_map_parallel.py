@@ -16,14 +16,14 @@ import pandas as pd
 ##################################################
 
 base_directory = '../../'
-sim_directory = 'sims/NW_Eur/constant_tas_ws/'
+sim_directory = 'sims/NW_Eur/ws_var_allconst/'
 # num_procs = mp.cpu_count() # this will use all available processors. Note that on a multi-node machine it can only use the processors on one node
 # num_procs = 1 # The default is to use all available processors, but it is possible to specify the number of processors.
-num_procs = int(mp.cpu_count()*4/5) 
+num_procs = int(mp.cpu_count()*6/7) 
 
 output_directory = '/massive/ra499/' + sim_directory + 'output/'  #where you want the output to go (note you can specify the whole thing - no need for base_directory+ at the start)
 
-output_file_name = 'NW_const_tas_ws'
+output_file_name = 'NW_ws_var_allc'
 meterological_file_name = 'meterological_data'
 domain_file_name = 's12_m2_s2_n2_h_map_NW_Eur.dat'
 nutrient_file_name = 'initial_nitrate_NW_Eur.dat'
