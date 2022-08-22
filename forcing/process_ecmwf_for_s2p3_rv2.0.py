@@ -31,7 +31,7 @@ from scipy.spatial import KDTree
 
 
 min_depth_lim = 10.0
-max_depth_lim = 120.0
+max_depth_lim = 200.0
 
 start_year = 1901
 end_year = 2010
@@ -168,6 +168,8 @@ def interpolate_forcing_data(input_variables,sample_points_lat_lon,znew_tmp,cube
         # f = interpolate.interp2d(cube_year.coord('longitude').points, cube_year.coord('latitude').points, cube_year[j].data, kind='linear')
         # znew[j,k,:] = [f(sample_points_lat_lon['lon'].values[i], sample_points_lat_lon['lat'].values[i])[0] for i in range(len(sample_points_lat_lon['lat'].values))]
         #https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.RectBivariateSpline.html
+        print(cube_year.coord('latitude').points)
+        print(cube_year.coord('longitude').points)
         f = RectBivariateSpline(cube_year.coord('latitude').points,cube_year.coord('longitude').points, cube_year[j].data)
         znew_tmp[j,:] = [f(sample_points_lat_lon['lat'].values[i], sample_points_lat_lon['lon'].values[i])[0] for i in range(len(sample_points_lat_lon['lat'].values))]
         #https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.Rbf.html

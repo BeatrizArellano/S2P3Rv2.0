@@ -39,7 +39,7 @@ start_year = 1901
 
 end_year = 2010 # same as start year resuls in a 1 year run
 depth_min = 10.0 # NOTE that these numbers MUST be the same as those used in the scripts used to produce the meterology and nutrient files, otherwse data will not be taken for teh correct lats/lons and/or the script will fail
-depth_max = 120.0
+depth_max = 200.0
 write_error_output = False
 
 parallel_processing = True
