@@ -31,7 +31,7 @@ from scipy.spatial import KDTree
 
 
 min_depth_lim = 10.0
-max_depth_lim = 120.0
+max_depth_lim = 200.0
 
 start_year = 1901
 end_year = 2010
@@ -48,8 +48,8 @@ domain_file = '../sims/NW_Eur/s12_m2_s2_n2_h_map_NW_Eur.dat'
 # pickle has a 2GB limit in python2
 
 #Specify where the ncep data is stored on your computer
-directory_containing_files_to_process = '../sims/NW_Eur/constant_wind_speed/met_data/ecmwf/'
-output_directory = '../sims/NW_Eur/constant_wind_speed/met_data/processed/'
+directory_containing_files_to_process = '/data/local_ssd/ra499/sims/NW_Eur/control/met_data/ecmwf/'
+output_directory = '/data/local_ssd/ra499/sims/NW_Eur/control/met_data/processed/'
 
 #value to set the minimum wind value to to avoid build up of heat in high cloud, low wind speed situations
 # min_wind_value = 2.0
