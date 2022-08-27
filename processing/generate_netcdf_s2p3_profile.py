@@ -20,11 +20,11 @@ from run_map_parallel import output_type,include_depth_output,include_temp_surfa
                include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,\
                include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output
                
-create_bathymetry = False
+create_bathymetry = True
 
-input_path = '/massive/ra499/sims/NW_Eur/all_constant/output/'
-output_path = '/massive/ra499/sims/NW_Eur/all_constant/output/netcdf/'
-file_id = 'NW_allconst'
+input_path = '/data/local_ssd/ra499/sims/NW_Eur/control/output/'
+output_path = '/data/local_ssd/ra499/sims/NW_Eur/control/output/netcdf/'
+file_id = 'NW_control'
 
 
 if output_type == 1:
