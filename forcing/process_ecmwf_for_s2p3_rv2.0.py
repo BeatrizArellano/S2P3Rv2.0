@@ -48,8 +48,8 @@ domain_file = '../sims/NW_Eur/s12_m2_s2_n2_h_map_NW_Eur.dat'
 # pickle has a 2GB limit in python2
 
 #Specify where the ncep data is stored on your computer
-directory_containing_files_to_process = '/data/local_ssd/ra499/sims/NW_Eur/control/met_data/ecmwf/'
-output_directory = '/data/local_ssd/ra499/sims/NW_Eur/control/met_data/processed/'
+directory_containing_files_to_process = '/massive/ra499/sims/NW_Eur/control/met_data/ecmwf/'
+output_directory = '/massive/ra499/sims/NW_Eur/control/met_data/processed/'
 
 #value to set the minimum wind value to to avoid build up of heat in high cloud, low wind speed situations
 # min_wind_value = 2.0
