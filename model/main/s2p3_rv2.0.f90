@@ -275,7 +275,7 @@ END MODULE GRAPHICS_VARIABLES
       include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,&
       include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,&
       include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,include_u_mean_output,&
-      include_grow1_mean_output,include_uptake1_mean_output,include_din_output
+      include_grow1_mean_output,include_uptake1_mean_output,include_din_output,include_Kz_mean_output
 
 !
 !   Initialise Winteracter
@@ -290,7 +290,8 @@ END MODULE GRAPHICS_VARIABLES
       include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,&
       include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,&
       include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,&
-      include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output)
+      include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,&
+      include_din_output,include_Kz_mean_output)
       depth=newdepth; N=newN; dz=newdz
 !      print*, 'getting phyto defaults'
       call get_phyto_defaults()
@@ -359,7 +360,7 @@ END MODULE GRAPHICS_VARIABLES
       include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,&
       include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,&
       include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,include_u_mean_output,&
-      include_grow1_mean_output,include_uptake1_mean_output,include_din_output
+      include_grow1_mean_output,include_uptake1_mean_output,include_din_output,include_Kz_mean_output
 
 
 !
@@ -374,7 +375,8 @@ END MODULE GRAPHICS_VARIABLES
               include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,&
               include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,&
       	      include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,&
-              include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output)
+              include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,&
+              include_din_output,include_Kz_mean_output)
               deallocate (contour_data,xdata,ydata,profile,au,bu,cu,du,ru,qu,tke,tkeold,eps)
 !
 !       Open required files for results, and write headers
@@ -447,7 +449,8 @@ END MODULE GRAPHICS_VARIABLES
           include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,&
           include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,&
           include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,&
-          include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output)
+          include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,&
+          include_din_output,include_Kz_mean_output)
 
               surface_out='surface'//unique_job_id//'.dat'; phys_profile_day='physday.dat'; bio_profile_day='biolday.dat';&
                monthly_out='monthly'//unique_job_id//'.dat'
@@ -481,7 +484,8 @@ END MODULE GRAPHICS_VARIABLES
           include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,&
           include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,&
           include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,&
-          include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output)
+          include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,&
+          include_din_output,include_Kz_mean_output)
       USE VARIABLES
       use physics
       use turbulence
@@ -517,7 +521,7 @@ END MODULE GRAPHICS_VARIABLES
           include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,&
           include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,&
           include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,&
-          include_din_output,output_type
+          include_din_output,include_Kz_mean_output,output_type
 
 
 
@@ -660,6 +664,7 @@ END MODULE GRAPHICS_VARIABLES
         read(5,'(i1)') include_grow1_mean_output
         read(5,'(i1)') include_uptake1_mean_output
         read(5,'(i1)') include_din_output
+        read(5,'(i1)') include_Kz_mean_output        
         read(5,'(i1)') output_type
         imode=output_type
 
@@ -1020,7 +1025,8 @@ subroutine get_physics_defaults(lat_in_domain,lon_in_domain,run_year,start_year,
 			    include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,&
 			    include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,&
 			    include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,&
-      			    include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output)
+      		include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,&
+          include_din_output,include_Kz_mean_output)
 
 use physics
 use turbulence
@@ -1048,7 +1054,7 @@ integer :: include_depth_output,include_temp_surface_output,include_temp_bottom_
           include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,&
           include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,&
           include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,&
-          include_din_output,output_type
+          include_din_output,include_Kz_mean_output,output_type
 
 ! get lon, lat, depth
 
@@ -1105,6 +1111,7 @@ integer :: include_depth_output,include_temp_surface_output,include_temp_bottom_
         read(5,'(i1)') include_grow1_mean_output
         read(5,'(i1)') include_uptake1_mean_output
         read(5,'(i1)') include_din_output
+        read(5,'(i1)') include_Kz_mean_output        
         read(5,'(i1)') output_type
         imode=output_type
 
@@ -1444,14 +1451,15 @@ Subroutine grazing()	! Get phytoplankton grazing parameters
 !********************************************************************
 
      subroutine run_model(run_year,start_year,unique_job_id,iline,woa_nutrient,include_depth_output,include_temp_surface_output,&
-			    include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,&
+			        include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,&
           		include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,&
           		include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,&
           		include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,&
           		include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,&
           		include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,&
-			include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,&
-      			include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output)
+			        include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,&
+      			  include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,&
+              include_din_output,include_Kz_mean_output)
 
      use variables
      use variables_all
@@ -1491,7 +1499,8 @@ Subroutine grazing()	! Get phytoplankton grazing parameters
           include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,&
           include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,&
           include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,&
-          include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output
+          include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,&
+          include_din_output,include_Kz_mean_output
 
 
 !
@@ -1969,8 +1978,8 @@ timeloop: do itime=1,itotal                     ! <A NAME="START OF TIME LOOP">
            write(6,fmt="(i4,3f8.3)",advance="no")iday,lon,lat,depth-(height(i)-dz/2.0)
            
            if(include_depth_output.eq.1) then
-	  	write(6,fmt="(1f8.2)",advance="no")depth
-	   end if
+	  	      write(6,fmt="(1f8.2)",advance="no")depth
+	        end if
 	   
 	   if(include_temp_output.eq.1) then
 	  	write(6,fmt="(1f8.2)",advance="no")temp_new(i)
@@ -2003,6 +2012,10 @@ timeloop: do itime=1,itotal                     ! <A NAME="START OF TIME LOOP">
 	   if(include_din_output.eq.1) then
 	  	write(6,fmt="(1f8.2)",advance="no")s_new(i)
 	   end if
+
+     if(include_Kz_mean_output.eq.1) then
+	  	write(6,fmt="(1f8.2)",advance="no")Kz_mean(i)
+	   end if     
 	   
 	   if(include_windspeed_output.eq.1) then
 	  	write(6,fmt="(1f8.2)",advance="no")windspeed
@@ -2037,8 +2050,9 @@ timeloop: do itime=1,itotal                     ! <A NAME="START OF TIME LOOP">
 	   end if
 
 	   if(include_simpson_hunter_output.eq.1) then
-	 	write(6,fmt="(1f8.2)",advance="no")dlog10(depth/u3_mean)
+	 	  write(6,fmt="(1f8.2)",advance="no")dlog10(depth/u3_mean)
 	   end if
+    
 
 	   write(6,fmt="()")
 

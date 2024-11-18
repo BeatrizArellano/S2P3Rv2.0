@@ -88,18 +88,19 @@ include_u_mean_output=1       # daily mean u in cm/s !!
 include_grow1_mean_output=0   # daily mean growth rate d-1
 include_uptake1_mean_output=0 # daily mean DIN uptake rate mmol DIN (mg C)-1 d-1
 include_din_output=1          # Dissolved Inorganic Nitrogen (mmol m-3)
+include_Kz_mean_output=1      # daily mean diffusivity (m2 s-1)
 
 ### Variables to output for both choices: 2D and 3D
 
 include_windspeed_output=1      # windspeed
-include_stressx_output=1        # x component of surface wind drag
-include_stressy_output=1        # y component of surface wind drag
-include_Etide_output=1          # Mixing power in the tidal currents (assumes constant mixing efficiency 0.003)
-include_Ewind_output=1          # Mixing power in the wind (assumes constant mixing efficiency 0.023 and slippage factor=0.025)
+include_stressx_output=0        # x component of surface wind drag
+include_stressy_output=0        # y component of surface wind drag
+include_Etide_output=0          # Mixing power in the tidal currents (assumes constant mixing efficiency 0.003)
+include_Ewind_output=0          # Mixing power in the wind (assumes constant mixing efficiency 0.023 and slippage factor=0.025)
 include_tpn1_output=0           # total water column net production / mg C m-2 d-1
 include_tpg1_output=0           # total water column gross production / mg C m-2 hd-1
 include_speed3_output=0        	# depth-mean current speed
-include_simpson_hunter_output=1 # Simpson & Hunter stratification parameter dlog10(depth/u3_mean)
+include_simpson_hunter_output=0 # Simpson & Hunter stratification parameter dlog10(depth/u3_mean)
 
 ###
 
@@ -122,7 +123,8 @@ if output_type == 1:
 elif output_type == 2:
     
     columns = [include_depth_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,\
-               include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output,\
+               include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,\
+               include_din_output,include_Kz_mean_output,\
                include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,\
                include_tpn1_output,include_tpg1_output,include_speed3_output,include_simpson_hunter_output]
         
@@ -251,7 +253,7 @@ if __name__ == "__main__":
     
     
     
-    def run_model(domain_file_name,lats_lons,year,start_year,unique_job_id,met_data_temporary_location,lon_domain,lat_domain,smaj1,smin1,smaj2,smin2,smaj3,smin3,smaj4,smin4,smaj5,smin5,woa_nutrient,alldepth,include_depth_output,include_temp_surface_output,include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output,output_type,i):
+    def run_model(domain_file_name,lats_lons,year,start_year,unique_job_id,met_data_temporary_location,lon_domain,lat_domain,smaj1,smin1,smaj2,smin2,smaj3,smin3,smaj4,smin4,smaj5,smin5,woa_nutrient,alldepth,include_depth_output,include_temp_surface_output,include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output,include_Kz_mean_output,output_type,i):
         #modifying so that the fortran code looks for the correct met file, rather than us having to copy it into the working directory
         # lon,lat = return_domain_lon(base_directory+'domain/'+domain_file_name,i)
         lon_domain_tmp = float(lon_domain[i])
@@ -310,6 +312,7 @@ if __name__ == "__main__":
         str(include_grow1_mean_output),
         str(include_uptake1_mean_output),
         str(include_din_output),
+        str(include_Kz_mean_output),        
         str(output_type),
         str(start_year),
         str(year),
@@ -363,6 +366,7 @@ if __name__ == "__main__":
         str(include_grow1_mean_output),
         str(include_uptake1_mean_output),
         str(include_din_output),
+        str(include_Kz_mean_output),        
         str(output_type),
         'EOF'
         ])
@@ -435,7 +439,7 @@ if __name__ == "__main__":
     
         if parallel_processing:
             pool = mp.Pool(processes=num_procs)
-            func = partial(run_model, domain_file_name, lats_lons, year, start_year, unique_job_id, met_data_temporary_location,lon_domain,lat_domain,smaj1,smin1,smaj2,smin2,smaj3,smin3,smaj4,smin4,smaj5,smin5,woa_nutrient,alldepth,include_depth_output,include_temp_surface_output,include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output,output_type)
+            func = partial(run_model, domain_file_name, lats_lons, year, start_year, unique_job_id, met_data_temporary_location,lon_domain,lat_domain,smaj1,smin1,smaj2,smin2,smaj3,smin3,smaj4,smin4,smaj5,smin5,woa_nutrient,alldepth,include_depth_output,include_temp_surface_output,include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output,include_Kz_mean_output,output_type)
             # results,errors = pool.map(func, range(num_lines))
             results, errors = zip(*pool.map(func, range(len(lat_domain))))
             # results = pool.map(func, range(num_lines))
@@ -495,7 +499,7 @@ if __name__ == "__main__":
             # non parallel version
             with open(output_directory+output_file_name+'_'+str(year),'wb') as fout:
                 for i in range(len(lat_domain)):
-                    out,err = run_model(domain_file_name, lats_lons, year, start_year, unique_job_id, met_data_temporary_location,lon_domain,lat_domain,smaj1,smin1,smaj2,smin2,smaj3,smin3,smaj4,smin4,smaj5,smin5,woa_nutrient,alldepth,include_depth_output,include_temp_surface_output,include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output,output_type,i)
+                    out,err = run_model(domain_file_name, lats_lons, year, start_year, unique_job_id, met_data_temporary_location,lon_domain,lat_domain,smaj1,smin1,smaj2,smin2,smaj3,smin3,smaj4,smin4,smaj5,smin5,woa_nutrient,alldepth,include_depth_output,include_temp_surface_output,include_temp_bottom_output,include_chlorophyll_surface_output,include_phyto_biomass_surface_output,include_phyto_biomass_bottom_output,include_PAR_surface_output,include_PAR_bottom_output,include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,include_u_mean_surface_output,include_u_mean_bottom_output,include_grow1_mean_surface_output,include_grow1_mean_bottom_output,include_uptake1_mean_surface_output,include_uptake1_mean_bottom_output,include_tpn1_output,include_tpg1_output,include_speed3_output,include_simpson_hunter_output,include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output,include_Kz_mean_output,output_type,i)
                     fout.write(out)
     
     

@@ -18,7 +18,8 @@ from run_map_parallel import output_type,include_depth_output,include_temp_surfa
                include_windspeed_output,include_stressx_output,include_stressy_output,include_Etide_output,include_Ewind_output,\
                include_tpn1_output,include_tpg1_output,include_speed3_output,include_simpson_hunter_output,\
                include_temp_output,include_chlorophyll_output,include_phyto_biomass_output,\
-               include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,include_din_output
+               include_PAR_output,include_u_mean_output,include_grow1_mean_output,include_uptake1_mean_output,\
+               include_din_output,include_Kz_mean_output
                
 create_bathymetry = True
 
@@ -51,13 +52,14 @@ if output_type == 2:
 
     variables_all = {'bathymetry': {'include':include_depth_output,'units':'m','type':'2D','netcdf':False},
                      'temperature': {'include':include_temp_output,'units':'°C','type':'3D','netcdf':True},
-                     'chlorophyll': {'include':include_chlorophyll_output,'units':'','type':'3D','netcdf':False},
+                     'chlorophyll': {'include':include_chlorophyll_output,'units':'','type':'3D','netcdf':True},
                      'phyto_biomass': {'include':include_phyto_biomass_output,'units':'','type':'3D','netcdf':False},
                      'PAR': {'include':include_PAR_output,'units':'','type':'3D','netcdf':False},
                      'u_mean': {'include':include_u_mean_output,'units':'','type':'3D','netcdf':False},
                      'grow1_mean': {'include':include_grow1_mean_output,'units':'','type':'3D','netcdf':False},
                      'uptake1_mean': {'include':include_uptake1_mean_output,'units':'','type':'3D','netcdf':False},
-                     'DIN': {'include':include_din_output,'units':'mmol m-3','type':'3D','netcdf':False},
+                     'DIN': {'include':include_din_output,'units':'mmol m-3','type':'3D','netcdf':True},
+                     'Kz': {'include':include_Kz_mean_output,'units':'m2 s-1','type':'3D','netcdf':True},                     
                      'windspeed': {'include':include_windspeed_output,'units':'','type':'2D','netcdf':False},
                      'stress_x': {'include':include_stressx_output,'units':'','type':'2D','netcdf':False},
                      'stress_y': {'include':include_stressy_output,'units':'','type':'2D','netcdf':False},
