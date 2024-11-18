@@ -16,14 +16,14 @@ import pandas as pd
 ##################################################
 
 base_directory = '../../'
-sim_directory = 'sims/NW_Eur/control/'
+sim_directory = 'sims/NW_Eur/all_constant/'
 # num_procs = mp.cpu_count() # this will use all available processors. Note that on a multi-node machine it can only use the processors on one node
 # num_procs = 1 # The default is to use all available processors, but it is possible to specify the number of processors.
-num_procs = int(mp.cpu_count()*6/7) 
+num_procs = int(mp.cpu_count()*9/10) 
 
 output_directory = '/massive/ra499/' + sim_directory + 'output/'  #where you want the output to go (note you can specify the whole thing - no need for base_directory+ at the start)
 
-output_file_name = 'NW_control'
+output_file_name = 'NW_all_constant'
 meterological_file_name = 'meterological_data'
 domain_file_name = 's12_m2_s2_n2_h_map_NW_Eur.dat'
 nutrient_file_name = 'initial_nitrate_NW_Eur.dat'
@@ -83,8 +83,8 @@ include_uptake1_mean_bottom_output=0 # daily mean DIN uptake rate mmol DIN (mg C
 include_temp_output=1
 include_chlorophyll_output=1
 include_phyto_biomass_output=1
-include_PAR_output=1          # daily mean of PAR W m-2 at each depth level
-include_u_mean_output=1       # daily mean u in cm/s !!
+include_PAR_output=0          # daily mean of PAR W m-2 at each depth level
+include_u_mean_output=0       # daily mean u in cm/s !!
 include_grow1_mean_output=0   # daily mean growth rate d-1
 include_uptake1_mean_output=0 # daily mean DIN uptake rate mmol DIN (mg C)-1 d-1
 include_din_output=1          # Dissolved Inorganic Nitrogen (mmol m-3)
@@ -129,7 +129,7 @@ elif output_type == 2:
                include_tpn1_output,include_tpg1_output,include_speed3_output,include_simpson_hunter_output]
         
     column_names_all = ['total depth','temperature','chlorophyll','phyto biomass','PAR',\
-                        'u_mean','grow1_mean','uptake1_mean','DIN','windspeed','stress_x','stress_y',\
+                        'u_mean','grow1_mean','uptake1_mean','DIN','Kz','windspeed','stress_x','stress_y',\
                         'Etide','Ewind','tpn1','tpg1','speed3','simpson_hunter']
     column_names = ['day','longitude','latitude','depth']+list(compress(column_names_all, map(bool,columns)))
     
