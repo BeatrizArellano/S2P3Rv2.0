@@ -2014,7 +2014,7 @@ timeloop: do itime=1,itotal                     ! <A NAME="START OF TIME LOOP">
 	   end if
 
      if(include_Kz_mean_output.eq.1) then
-	  	write(6,fmt="(1f2.7)",advance="no")Kz_mean(i)
+	  	write(6,fmt="(1f10.7)",advance="no")Kz_mean(i)
 	   end if     
 	   
 	   if(include_windspeed_output.eq.1) then
